@@ -18,11 +18,12 @@ set(INSTALL_TARGETS_DEFAULT_ARGS
 )
 
 add_definitions(
-    -DSYSCONFDIR="/etc"
+    -DSYSCONFDIR="${CMAKE_INSTALL_FULL_SYSCONFDIR}"
     -DHAVE_UNISTD_H
     -DHAVE_NSS_H
 )
 
+add_subdirectory(conf)
 add_subdirectory(src)
 add_subdirectory(doc)
 
