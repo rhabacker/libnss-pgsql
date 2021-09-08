@@ -11,7 +11,7 @@
  */
 
 #include "nss-pgsql.h"
-#include <postgresql/libpq-fe.h>
+#include <pgsql/libpq-fe.h>
 #include <stdlib.h>
 #include <string.h>
 #include <stdio.h>
