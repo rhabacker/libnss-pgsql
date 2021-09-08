@@ -78,7 +78,8 @@ int backend_open(char type)
 			if(PQstatus(_shadowconn) == CONNECTION_OK) {
 				++_shadowisopen;
 			} else {
-				print_msg("\nCould not connect to database\n");
+				print_msg("\nCould not connect to database - %s\n", PQerrorMessage(_shadowconn));
+				print_msg("I tried to read connection info from '%s'\n", CFGROOTFILE);
 			}
 		}
 		return (_shadowisopen > 0);
@@ -94,7 +95,8 @@ int backend_open(char type)
 			if(PQstatus(_conn) == CONNECTION_OK) {
 				++_isopen;
 			} else {
-				print_msg("\nCould not connect to database\n");
+				print_msg("\nCould not connect to database - %s\n", PQerrorMessage(_conn));
+				print_msg("I tried to read connection info from '%s'\n", CFGFILE);
 			}
 		}
 		return (_isopen > 0);
@@ -139,6 +141,12 @@ inline enum nss_status getent_prepare(const char *what)
 	char *stmt;
 	PGresult *res;
 	ExecStatusType status;
+
+	char *cfg = getcfg(what);
+	if (cfg == NULL || *cfg == '\0') {
+		print_msg("\nCould not get query for '%s'\n", what);
+		return NSS_STATUS_UNAVAIL;
+	}
 
 	asprintf(&stmt, "DECLARE nss_pgsql_internal_%s_curs SCROLL CURSOR FOR "
 	                "%s FOR READ ONLY", what, getcfg(what));
